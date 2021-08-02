@@ -1,0 +1,8 @@
+[global]
+http_addr = ":8080"
+https_addr = ":8443"
+http_api_addr = ":8088"
+https_api_addr = ":8488"
+
+[plugins]
+
