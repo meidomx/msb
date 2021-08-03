@@ -2,50 +2,63 @@ package builtin
 
 import (
 	"net/http"
+	"reflect"
 
 	"github.com/meidomx/msb/api"
 	"github.com/meidomx/msb/module"
-	"github.com/meidomx/msb/utils"
-
-	"github.com/julienschmidt/httprouter"
 )
 
 type Modules struct {
 }
 
-func (m Modules) Name() string {
+type ManagementRequest struct {
+	Operation string
+}
+
+func (this Modules) ContentTypes() (api.RequestFormat, api.ResponseFormat) {
+	return api.RequestFormatJson, api.ResponseFormatJson
+}
+
+func (this Modules) RequestType() reflect.Type {
+	return reflect.TypeOf(ManagementRequest{})
+}
+
+func (this Modules) Handle(request *api.HttpRequest) *api.HttpResponse {
+	if request.RequestObject != nil {
+		LOGGER.Info("request:", request.RequestObject)
+	}
+
+	m := make(map[string]interface{})
+	var httpApis []string
+	for _, v := range module.GetHttpApiHandlers() {
+		httpApis = append(httpApis, v.Name())
+	}
+	m["http_api"] = httpApis
+
+	return &api.HttpResponse{
+		HttpStatus: http.StatusOK,
+		HandleResult: api.HandleResult{
+			Result: m,
+		},
+	}
+}
+
+func (this Modules) Name() string {
 	return "builtin.modules"
 }
 
-func (m Modules) HttpMethods() []api.HttpMethod {
+func (this Modules) HttpMethods() []api.HttpMethod {
 	return []api.HttpMethod{
 		api.HttpMethodGet,
+		api.HttpMethodPost,
 	}
 }
 
-func (m Modules) UrlMapping() string {
+func (this Modules) UrlMapping() string {
 	return "/builtin/modules"
 }
 
-func (m Modules) Handler() httprouter.Handle {
-	return func(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-		writer.WriteHeader(http.StatusOK)
-
-		m := make(map[string]interface{})
-		var httpApis []string
-		for _, v := range module.GetHttpApiHandlers() {
-			httpApis = append(httpApis, v.Name())
-		}
-		m["http_api"] = httpApis
-
-		_, err := writer.Write(utils.ObjToJson(m))
-		if err != nil {
-			LOGGER.Error("builtin modules responding fails.", err)
-		}
-	}
-}
-
-var mgr api.HttpApiHandler = Modules{}
+var mgr api.HttpApiSimpleHandler = Modules{}
 
 func init() {
 	module.RegisterHttpApiHandler(mgr)

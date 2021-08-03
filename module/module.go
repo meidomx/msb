@@ -2,12 +2,12 @@ package module
 
 import "github.com/meidomx/msb/api"
 
-var hs []api.HttpApiHandler
+var hs []api.HttpApiSimpleHandler
 
-func RegisterHttpApiHandler(h api.HttpApiHandler) {
+func RegisterHttpApiHandler(h api.HttpApiSimpleHandler) {
 	hs = append(hs, h)
 }
 
-func GetHttpApiHandlers() []api.HttpApiHandler {
+func GetHttpApiHandlers() []api.HttpApiSimpleHandler {
 	return hs
 }

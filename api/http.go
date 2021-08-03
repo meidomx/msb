@@ -1,6 +1,10 @@
 package api
 
-import "github.com/julienschmidt/httprouter"
+import (
+	"reflect"
+
+	"github.com/julienschmidt/httprouter"
+)
 
 type HttpMethod int
 
@@ -15,6 +19,7 @@ const (
 )
 
 type RequestFormat int
+type ResponseFormat int
 
 const (
 	RequestFormatUrlEncoded RequestFormat = 1
@@ -22,9 +27,30 @@ const (
 	RequestFormatMultipart  RequestFormat = 3
 )
 
-type HttpApiHandler interface {
+const (
+	ResponseFormatRawBinary ResponseFormat = 1
+	ResponseFormatJson      ResponseFormat = 2
+)
+
+type HttpRequest struct {
+	RequestURI string
+	Params     httprouter.Params
+
+	RequestObject interface{}
+}
+
+type HttpResponse struct {
+	HttpStatus      int
+	HttpContentType string
+
+	HandleResult
+}
+
+type HttpApiSimpleHandler interface {
 	Name() string
 	HttpMethods() []HttpMethod
+	ContentTypes() (RequestFormat, ResponseFormat)
 	UrlMapping() string
-	Handler() httprouter.Handle
+	RequestType() reflect.Type
+	Handle(request *HttpRequest) *HttpResponse
 }

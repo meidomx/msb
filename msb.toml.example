@@ -5,4 +5,5 @@ http_api_addr = ":8088"
 https_api_addr = ":8488"
 
 [plugins]
-
+plugin_libs = []
+plugin_folders = []

@@ -9,3 +9,7 @@ func ObjToJson(obj interface{}) []byte {
 	}
 	return b
 }
+
+func ObjFromJson(data []byte, obj interface{}) error {
+	return json.Unmarshal(data, obj)
+}
