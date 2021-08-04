@@ -52,5 +52,5 @@ type HttpApiSimpleHandler interface {
 	ContentTypes() (RequestFormat, ResponseFormat)
 	UrlMapping() string
 	RequestType() reflect.Type
-	Handle(request *HttpRequest) *HttpResponse
+	Handle(request *HttpRequest, msbHandler MsbHandler) *HttpResponse
 }

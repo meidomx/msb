@@ -11,6 +11,12 @@ type MsbConfig struct {
 		HttpApiAddr  string `toml:"http_api_addr"`
 		HttpsApiAddr string `toml:"https_api_addr"`
 	} `toml:"global"`
+
+	Shared struct {
+		JobScheduling struct {
+			Timezone string `toml:"timezone"`
+		} `toml:"jobscheduling"`
+	} `toml:"shared"`
 }
 
 func LoadConfig(path string) (*MsbConfig, error) {

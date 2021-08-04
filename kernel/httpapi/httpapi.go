@@ -122,7 +122,8 @@ func WrapHttpApiHandler(h api.HttpApiSimpleHandler) httprouter.Handle {
 				RequestURI: request.RequestURI,
 				Params:     params,
 			}
-			r := h.Handle(&httpReq)
+			//TODO MsbHandler required
+			r := h.Handle(&httpReq, nil)
 			writeResult(r, resType, writer)
 			return
 		}
@@ -135,7 +136,8 @@ func WrapHttpApiHandler(h api.HttpApiSimpleHandler) httprouter.Handle {
 					RequestURI: request.RequestURI,
 					Params:     params,
 				}
-				r := h.Handle(&httpReq)
+				//TODO MsbHandler required
+				r := h.Handle(&httpReq, nil)
 				writeResult(r, resType, writer)
 				return
 			} else {
@@ -161,7 +163,8 @@ func WrapHttpApiHandler(h api.HttpApiSimpleHandler) httprouter.Handle {
 					Params:        params,
 					RequestObject: v.Interface(),
 				}
-				r := h.Handle(&httpReq)
+				//TODO MsbHandler required
+				r := h.Handle(&httpReq, nil)
 				writeResult(r, resType, writer)
 				return
 			}

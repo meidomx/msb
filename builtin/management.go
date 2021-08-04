@@ -23,7 +23,7 @@ func (this Modules) RequestType() reflect.Type {
 	return reflect.TypeOf(ManagementRequest{})
 }
 
-func (this Modules) Handle(request *api.HttpRequest) *api.HttpResponse {
+func (this Modules) Handle(request *api.HttpRequest, msbHandler api.MsbHandler) *api.HttpResponse {
 	if request.RequestObject != nil {
 		LOGGER.Info("request:", request.RequestObject)
 	}
@@ -60,6 +60,26 @@ func (this Modules) UrlMapping() string {
 
 var mgr api.HttpApiSimpleHandler = Modules{}
 
+type ModuleJob struct {
+}
+
+func (m ModuleJob) CronConfig() string {
+	return "*/1 * * * *"
+}
+
+func (m ModuleJob) Name() string {
+	return "management.job"
+}
+
+func (m ModuleJob) Handler(msbHandler api.MsbHandler) (api.JobResultIndicator, error) {
+	LOGGER.Info("job keep alive")
+
+	return api.JobResultSuccess, nil
+}
+
+var mgrjob api.SchedulingJob = ModuleJob{}
+
 func init() {
 	module.RegisterHttpApiHandler(mgr)
+	module.RegisterSchedulingJob(mgrjob)
 }

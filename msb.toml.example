@@ -4,6 +4,9 @@ https_addr = ":8443"
 http_api_addr = ":8088"
 https_api_addr = ":8488"
 
+[shared.jobscheduling]
+timezone = "Asia/Shanghai"
+
 [plugins]
 plugin_libs = []
 plugin_folders = []

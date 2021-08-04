@@ -7,17 +7,21 @@ import (
 
 	"github.com/meidomx/msb/config"
 	"github.com/meidomx/msb/kernel/httpapi"
+	"github.com/meidomx/msb/kernel/jobscheduler"
 	"github.com/meidomx/msb/module"
 )
 
 type MsbCore struct {
-	httpApi *httpapi.HttpApi
-	cfg     config.MsbConfig
+	httpApi      *httpapi.HttpApi
+	jobScheduler *jobscheduler.JobScheduler
+
+	cfg config.MsbConfig
 }
 
 func NewMsbCore(cfg config.MsbConfig) (*MsbCore, error) {
 	msb := new(MsbCore)
 	msb.httpApi = httpapi.NewHttpApi(cfg)
+	msb.jobScheduler = jobscheduler.NewJobScheduler(cfg)
 
 	return msb, nil
 }
@@ -30,6 +34,11 @@ func (this *MsbCore) Init() error {
 		hs := module.GetHttpApiHandlers()
 		this.httpApi.BuildHttpApiHandlers(hs)
 	}
+	// init job scheduler
+	{
+		jobs := module.GetSchedulingJob()
+		this.jobScheduler.BuildJobs(jobs)
+	}
 
 	return nil
 }
@@ -37,6 +46,9 @@ func (this *MsbCore) Init() error {
 func (this *MsbCore) SyncStart() error {
 
 	if err := this.httpApi.Start(); err != nil {
+		return err
+	}
+	if err := this.jobScheduler.Start(); err != nil {
 		return err
 	}
 
