@@ -16,6 +16,7 @@ mesh service bus - enterprise service bus on service mesh
 * HTTP Web: http/https
 * HTTP API: http/https
 * Job Scheduler
+
 ### 2.2 General processing flow
 
 * Caller -> Entrypoint -> Process
@@ -34,6 +35,10 @@ github.com/julienschmidt/httprouter
 
 * Job scheduler
 github.com/go-co-op/gocron
+
+* Database driver
+** Postgresql
+github.com/jackc/pgx/v4
 ```
 
 ## Misc

@@ -5,6 +5,7 @@ import (
 
 	"github.com/meidomx/msb/api"
 	"github.com/meidomx/msb/config"
+	"github.com/meidomx/msb/module"
 
 	"github.com/go-co-op/gocron"
 )
@@ -15,6 +16,15 @@ type JobScheduler struct {
 	jobs     []api.SchedulingJob
 	tempJobs []api.SchedulingJob
 }
+
+type JobMsbHandler struct {
+}
+
+func (h JobMsbHandler) CallProcess(process string, param interface{}) (interface{}, error) {
+	return module.GetProcess(process).Call(param)
+}
+
+var shared api.MsbHandler = JobMsbHandler{}
 
 func NewJobScheduler(config config.MsbConfig) *JobScheduler {
 	loc, err := time.LoadLocation(config.Shared.JobScheduling.Timezone)
@@ -44,8 +54,8 @@ func (this *JobScheduler) Start() error {
 
 	for _, v := range this.jobs {
 		_, err := this.sch.Cron(v.CronConfig()).Do(func() {
-			//TODO MsbHandler required
-			_, err := v.Handler(nil)
+			// MsbHandler required
+			_, err := v.Handler(shared)
 			if err != nil {
 				LOGGER.Error("run job handler failed.", err)
 			}

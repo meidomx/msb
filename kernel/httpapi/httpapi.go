@@ -13,6 +13,7 @@ import (
 
 	"github.com/meidomx/msb/api"
 	"github.com/meidomx/msb/config"
+	"github.com/meidomx/msb/module"
 	"github.com/meidomx/msb/utils"
 
 	"github.com/julienschmidt/httprouter"
@@ -29,6 +30,15 @@ type HttpApi struct {
 
 	tmpMux *httprouter.Router
 }
+
+type HttpMsbHandler struct {
+}
+
+func (h HttpMsbHandler) CallProcess(process string, param interface{}) (interface{}, error) {
+	return module.GetProcess(process).Call(param)
+}
+
+var shared api.MsbHandler = HttpMsbHandler{}
 
 func NewHttpApi(cfg config.MsbConfig) *HttpApi {
 	httpApi := new(HttpApi)
@@ -122,8 +132,8 @@ func WrapHttpApiHandler(h api.HttpApiSimpleHandler) httprouter.Handle {
 				RequestURI: request.RequestURI,
 				Params:     params,
 			}
-			//TODO MsbHandler required
-			r := h.Handle(&httpReq, nil)
+			// MsbHandler required
+			r := h.Handle(&httpReq, shared)
 			writeResult(r, resType, writer)
 			return
 		}
@@ -136,8 +146,8 @@ func WrapHttpApiHandler(h api.HttpApiSimpleHandler) httprouter.Handle {
 					RequestURI: request.RequestURI,
 					Params:     params,
 				}
-				//TODO MsbHandler required
-				r := h.Handle(&httpReq, nil)
+				// MsbHandler required
+				r := h.Handle(&httpReq, shared)
 				writeResult(r, resType, writer)
 				return
 			} else {
@@ -163,8 +173,8 @@ func WrapHttpApiHandler(h api.HttpApiSimpleHandler) httprouter.Handle {
 					Params:        params,
 					RequestObject: v.Interface(),
 				}
-				//TODO MsbHandler required
-				r := h.Handle(&httpReq, nil)
+				// MsbHandler required
+				r := h.Handle(&httpReq, shared)
 				writeResult(r, resType, writer)
 				return
 			}
