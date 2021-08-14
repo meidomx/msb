@@ -3,6 +3,7 @@ package kern
 const (
 	TransformerFactoryType = "@.factory.transformer"
 	TransformerType        = "@.instance.transformer"
+	TransformerUsageScope  = "runtime"
 )
 
 type TransformerFactory interface {

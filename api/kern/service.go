@@ -3,6 +3,7 @@ package kern
 const (
 	ServiceFactoryType = "@.factory.service"
 	ServiceType        = "@.instance.service"
+	ServiceUsageScope  = "runtime"
 )
 
 type ServiceFactory interface {

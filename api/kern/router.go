@@ -1,10 +1,9 @@
 package kern
 
-import "github.com/meidomx/msb/api"
-
 const (
 	RouterFactoryType = "@.factory.router"
 	RouterType        = "@.instance.router"
+	RouterUsageScope  = "runtime"
 )
 
 type RouterFactory interface {
@@ -16,7 +15,7 @@ type RouterFactory interface {
 type Router interface {
 	Name() string
 
-	Route(result api.HandleResult) string
+	Route(result interface{}) string
 }
 
 type DefaultRouter struct {
@@ -27,7 +26,7 @@ func (d *DefaultRouter) Name() string {
 	return d.InstName
 }
 
-func (d *DefaultRouter) Route(result api.HandleResult) string {
+func (d *DefaultRouter) Route(result interface{}) string {
 	panic("implement me")
 }
 

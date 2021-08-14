@@ -3,6 +3,7 @@ package kern
 const (
 	BindingFactoryType = "@.factory.binding"
 	BindingType        = "@.instance.binding"
+	BindingUsageScope  = "init"
 )
 
 type BindingFactory interface {

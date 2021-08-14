@@ -3,6 +3,7 @@ package kern
 const (
 	AggregatorFactoryType = "@.factory.aggregator"
 	AggregatorType        = "@.instance.aggregator"
+	AggregatorUsageScope  = "runtime"
 )
 
 type AggregatorFactory interface {
