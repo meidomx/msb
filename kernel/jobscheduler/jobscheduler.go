@@ -65,7 +65,9 @@ func (this *JobScheduler) Start() error {
 			return err
 		}
 	}
-	this.sch.WaitForSchedule()
+	if len(this.jobs) > 0 {
+		this.sch.WaitForSchedule()
+	}
 	this.sch.StartAsync()
 
 	return nil

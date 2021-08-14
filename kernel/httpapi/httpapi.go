@@ -19,7 +19,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-var _ContentTypeJson = mime.TypeByExtension("json")
+var _ContentTypeJson = mime.TypeByExtension(".json")
 
 type HttpApi struct {
 	mux *httprouter.Router

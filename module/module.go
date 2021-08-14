@@ -108,6 +108,13 @@ func RegisterKernInstance(i interface{}) {
 			instances[kern.TransformerType] = sub
 		}
 		sub[item.Name()] = item
+	case kern.Splitter:
+		sub, ok := instances[kern.SplitterType]
+		if !ok {
+			sub = make(map[string]interface{})
+			instances[kern.SplitterType] = sub
+		}
+		sub[item.Name()] = item
 	default:
 		panic(errors.New("unknown instance type:" + fmt.Sprint(i)))
 	}
@@ -148,6 +155,13 @@ func RegisterKernFactory(f interface{}) {
 		if !ok {
 			sub = make(map[string]interface{})
 			factories[kern.TransformerFactoryType] = sub
+		}
+		sub[item.Name()] = item
+	case kern.SplitterFactory:
+		sub, ok := factories[kern.SplitterFactoryType]
+		if !ok {
+			sub = make(map[string]interface{})
+			factories[kern.SplitterFactoryType] = sub
 		}
 		sub[item.Name()] = item
 	default:

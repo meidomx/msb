@@ -54,3 +54,38 @@ type HttpApiSimpleHandler interface {
 	RequestType() reflect.Type
 	Handle(request *HttpRequest, msbHandler MsbHandler) *HttpResponse
 }
+
+type DefaultHttpApiSimpleHandler struct {
+	HandlerName              string
+	HttpMethodList           []HttpMethod
+	RequestPayloadFormat     RequestFormat
+	ResponsePayloadFormat    ResponseFormat
+	URL                      string
+	RequestPayloadObjectType reflect.Type
+}
+
+func (d *DefaultHttpApiSimpleHandler) Name() string {
+	return d.HandlerName
+}
+
+func (d *DefaultHttpApiSimpleHandler) HttpMethods() []HttpMethod {
+	return d.HttpMethodList
+}
+
+func (d *DefaultHttpApiSimpleHandler) ContentTypes() (RequestFormat, ResponseFormat) {
+	return d.RequestPayloadFormat, d.ResponsePayloadFormat
+}
+
+func (d *DefaultHttpApiSimpleHandler) UrlMapping() string {
+	return d.URL
+}
+
+func (d *DefaultHttpApiSimpleHandler) RequestType() reflect.Type {
+	return d.RequestPayloadObjectType
+}
+
+func (d *DefaultHttpApiSimpleHandler) Handle(request *HttpRequest, msbHandler MsbHandler) *HttpResponse {
+	panic("implement me")
+}
+
+var _ HttpApiSimpleHandler = new(DefaultHttpApiSimpleHandler)

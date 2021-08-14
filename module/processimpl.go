@@ -29,3 +29,7 @@ func InstantiateService(name string, conf map[string]interface{}, o interface{})
 func InstantiateTransformer(name string, conf map[string]interface{}, o interface{}) error {
 	return regInst(factories[kern.TransformerFactoryType][name].(kern.TransformerFactory).LoadConfig(conf, o))
 }
+
+func InstantiateSplitter(name string, conf map[string]interface{}, o interface{}) error {
+	return regInst(factories[kern.SplitterFactoryType][name].(kern.SplitterFactory).LoadConfig(conf, o))
+}
