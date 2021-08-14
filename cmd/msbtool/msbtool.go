@@ -61,7 +61,7 @@ func runCmd() {
 		panic(err)
 	}
 
-	if err = runBinary("go", []string{"get"}); err != nil {
+	if err = runBinary("go", []string{"get", "-u"}); err != nil {
 		panic(err)
 	}
 	if err = runBinary("go", []string{"build", "-o", "a.out"}); err != nil {
@@ -169,10 +169,6 @@ import (
 	"github.com/meidomx/msb/config"
 	"github.com/meidomx/msb/core"
 	"github.com/sirupsen/logrus"
-)
-
-import (
-	_ "github.com/meidomx/msb/builtin"
 )
 
 var LOGGER *logrus.Logger
