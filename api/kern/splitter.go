@@ -1,5 +1,7 @@
 package kern
 
+import "github.com/meidomx/msb/api"
+
 const (
 	SplitterFactoryType = "@.factory.splitter"
 	SplitterType        = "@.instance.splitter"
@@ -16,7 +18,7 @@ type Splitter interface {
 	Name() string
 
 	Parallel() bool
-	Split(interface{}) ([]interface{}, error)
+	Split(msbCtx api.MsbContext, input interface{}) ([]interface{}, error)
 }
 
 type DefaultSplitter struct {
@@ -31,7 +33,7 @@ func (d *DefaultSplitter) Name() string {
 	return d.InstName
 }
 
-func (d *DefaultSplitter) Split(i interface{}) ([]interface{}, error) {
+func (d *DefaultSplitter) Split(msbCtx api.MsbContext, input interface{}) ([]interface{}, error) {
 	panic("implement me")
 }
 

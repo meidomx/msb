@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/meidomx/msb/api"
 	"github.com/meidomx/msb/api/kern"
 )
 
@@ -15,8 +16,8 @@ func (e *ExampleService) Name() string {
 	return "exampleService"
 }
 
-func (e *ExampleService) Handle(i interface{}) (interface{}, error) {
-	return i, nil
+func (e *ExampleService) Handle(msbCtx api.MsbContext, input interface{}) (interface{}, error) {
+	return input, nil
 }
 
 type ExampleTransformer struct {
@@ -27,7 +28,7 @@ func (e *ExampleTransformer) Name() string {
 	return "exampleTransformer"
 }
 
-func (e *ExampleTransformer) Transform(input interface{}) (interface{}, error) {
+func (e *ExampleTransformer) Transform(msbCtx api.MsbContext, input interface{}) (interface{}, error) {
 	return input, nil
 }
 
@@ -39,8 +40,8 @@ func (e *ExampleSplitter) Name() string {
 	return "exampleSplitter"
 }
 
-func (e *ExampleSplitter) Split(i interface{}) ([]interface{}, error) {
-	return []interface{}{i, i, i}, nil
+func (e *ExampleSplitter) Split(msbCtx api.MsbContext, input interface{}) ([]interface{}, error) {
+	return []interface{}{input, input, input}, nil
 }
 
 type ExampleAggregator struct {
@@ -51,7 +52,7 @@ func (e *ExampleAggregator) Name() string {
 	return "exampleAggregator"
 }
 
-func (e *ExampleAggregator) Aggregate(inputs ...interface{}) (interface{}, error) {
+func (e *ExampleAggregator) Aggregate(msbCtx api.MsbContext, inputs ...interface{}) (interface{}, error) {
 	return inputs, nil
 }
 
@@ -63,7 +64,7 @@ func (e *ExampleRouter) Name() string {
 	return "exampleRouter"
 }
 
-func (e *ExampleRouter) Route(result interface{}) string {
+func (e *ExampleRouter) Route(msbCtx api.MsbContext, result interface{}) string {
 	return "2"
 }
 
@@ -103,7 +104,7 @@ func ExampleProcessBuilder() {
 		Stage(exampleService.Handle).
 		Build()
 
-	r, err := p("hello")
+	r, err := p(nil, "hello")
 	fmt.Println(r, err)
 
 	// Output: [hello hello hello] <nil>
@@ -142,7 +143,7 @@ func BenchmarkProcessBuilder(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := p("hello")
+		_, err := p(nil, "hello")
 		if err != nil {
 			b.Fatal(err)
 		}

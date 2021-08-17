@@ -1,5 +1,7 @@
 package kern
 
+import "github.com/meidomx/msb/api"
+
 const (
 	TransformerFactoryType = "@.factory.transformer"
 	TransformerType        = "@.instance.transformer"
@@ -15,7 +17,7 @@ type TransformerFactory interface {
 type Transformer interface {
 	Name() string
 
-	Transform(input interface{}) (interface{}, error)
+	Transform(msbCtx api.MsbContext, input interface{}) (interface{}, error)
 }
 
 type DefaultTransformer struct {
@@ -26,7 +28,7 @@ func (d *DefaultTransformer) Name() string {
 	return d.InstName
 }
 
-func (d *DefaultTransformer) Transform(input interface{}) (interface{}, error) {
+func (d *DefaultTransformer) Transform(msbCtx api.MsbContext, input interface{}) (interface{}, error) {
 	panic("implement me")
 }
 

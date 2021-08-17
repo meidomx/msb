@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/meidomx/msb/api"
 	"github.com/meidomx/msb/api/kern"
 	"github.com/meidomx/msb/api/moduleapi"
 	"github.com/meidomx/msb/module"
@@ -42,8 +43,8 @@ type PostgresDatabaseOperator struct {
 	ds *pgxpool.Pool
 }
 
-func (p *PostgresDatabaseOperator) Handle(i interface{}) (interface{}, error) {
-	r, ok := i.(*moduleapi.DatabaseQueryRequest)
+func (p *PostgresDatabaseOperator) Handle(msbCtx api.MsbContext, input interface{}) (interface{}, error) {
+	r, ok := input.(*moduleapi.DatabaseQueryRequest)
 	if !ok {
 		return nil, errors.New("postgres: request type is wrong")
 	}

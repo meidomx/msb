@@ -57,7 +57,7 @@ func init() {
 	}, nil); err != nil {
 		panic(err)
 	}
-	bd, err := module.GetBinding("ds").Bind(nil)
+	bd, err := module.GetBinding("ds").Bind(nil, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -88,8 +88,8 @@ func (t TempProcess) Name() string {
 	return "tempprocess"
 }
 
-func (t TempProcess) Call(param interface{}) (interface{}, error) {
-	return t.pg.Handle(param)
+func (t TempProcess) Call(msbCtx api.MsbContext, param interface{}) (interface{}, error) {
+	return t.pg.Handle(msbCtx, param)
 }
 
 var _ api.Process = TempProcess{}

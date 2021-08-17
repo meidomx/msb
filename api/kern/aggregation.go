@@ -1,5 +1,7 @@
 package kern
 
+import "github.com/meidomx/msb/api"
+
 const (
 	AggregatorFactoryType = "@.factory.aggregator"
 	AggregatorType        = "@.instance.aggregator"
@@ -15,7 +17,7 @@ type AggregatorFactory interface {
 type Aggregator interface {
 	Name() string
 
-	Aggregate(inputs ...interface{}) (interface{}, error)
+	Aggregate(msbCtx api.MsbContext, inputs ...interface{}) (interface{}, error)
 }
 
 type DefaultAggregator struct {
@@ -26,7 +28,7 @@ func (d *DefaultAggregator) Name() string {
 	return d.InstName
 }
 
-func (d *DefaultAggregator) Aggregate(inputs ...interface{}) (interface{}, error) {
+func (d *DefaultAggregator) Aggregate(msbCtx api.MsbContext, inputs ...interface{}) (interface{}, error) {
 	panic("implement me")
 }
 

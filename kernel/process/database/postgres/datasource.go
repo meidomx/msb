@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/meidomx/msb/api"
 	"github.com/meidomx/msb/api/kern"
 	"github.com/meidomx/msb/module"
 
@@ -46,7 +47,7 @@ type PostgresDatasourceProvider struct {
 	pool *pgxpool.Pool
 }
 
-func (p *PostgresDatasourceProvider) Bind(parameter interface{}) (interface{}, error) {
+func (p *PostgresDatasourceProvider) Bind(msbCtx api.MsbContext, parameter interface{}) (interface{}, error) {
 	pool, err := pgxpool.Connect(context.Background(), p.ConnectString)
 	if err != nil {
 		return nil, err

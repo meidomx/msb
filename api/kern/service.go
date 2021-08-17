@@ -1,5 +1,7 @@
 package kern
 
+import "github.com/meidomx/msb/api"
+
 const (
 	ServiceFactoryType = "@.factory.service"
 	ServiceType        = "@.instance.service"
@@ -15,7 +17,7 @@ type ServiceFactory interface {
 type Service interface {
 	Name() string
 
-	Handle(interface{}) (interface{}, error)
+	Handle(msbCtx api.MsbContext, input interface{}) (interface{}, error)
 }
 
 type DefaultService struct {
@@ -26,7 +28,7 @@ func (d *DefaultService) Name() string {
 	return d.InstName
 }
 
-func (d *DefaultService) Handle(i interface{}) (interface{}, error) {
+func (d *DefaultService) Handle(msbCtx api.MsbContext, input interface{}) (interface{}, error) {
 	panic("implement me")
 }
 

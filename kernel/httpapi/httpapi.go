@@ -35,7 +35,8 @@ type HttpMsbHandler struct {
 }
 
 func (h HttpMsbHandler) CallProcess(process string, param interface{}) (interface{}, error) {
-	return module.GetProcess(process).Call(param)
+	//TODO MsbContext
+	return module.GetProcess(process).Call(nil, param)
 }
 
 var shared api.MsbHandler = HttpMsbHandler{}

@@ -1,5 +1,7 @@
 package kern
 
+import "github.com/meidomx/msb/api"
+
 const (
 	BindingFactoryType = "@.factory.binding"
 	BindingType        = "@.instance.binding"
@@ -15,7 +17,7 @@ type BindingFactory interface {
 type Binding interface {
 	Name() string
 
-	Bind(parameter interface{}) (interface{}, error)
+	Bind(msbCtx api.MsbContext, parameter interface{}) (interface{}, error)
 }
 
 type DefaultBinding struct {
@@ -26,7 +28,7 @@ func (d *DefaultBinding) Name() string {
 	return d.InstName
 }
 
-func (d *DefaultBinding) Bind(parameter interface{}) (interface{}, error) {
+func (d *DefaultBinding) Bind(msbCtx api.MsbContext, parameter interface{}) (interface{}, error) {
 	panic("implement me")
 }
 

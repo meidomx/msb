@@ -3,5 +3,5 @@ package api
 type Process interface {
 	Name() string
 
-	Call(param interface{}) (interface{}, error)
+	Call(msbCtx MsbContext, param interface{}) (interface{}, error)
 }

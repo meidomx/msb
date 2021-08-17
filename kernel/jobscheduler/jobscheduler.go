@@ -21,7 +21,8 @@ type JobMsbHandler struct {
 }
 
 func (h JobMsbHandler) CallProcess(process string, param interface{}) (interface{}, error) {
-	return module.GetProcess(process).Call(param)
+	//TODO MsbContext
+	return module.GetProcess(process).Call(nil, param)
 }
 
 var shared api.MsbHandler = JobMsbHandler{}

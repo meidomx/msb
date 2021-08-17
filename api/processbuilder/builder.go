@@ -21,8 +21,8 @@ func (s *simpleProcess) Name() string {
 	return s.name
 }
 
-func (s *simpleProcess) Call(param interface{}) (interface{}, error) {
-	return s.f(param)
+func (s *simpleProcess) Call(msbCtx api.MsbContext, param interface{}) (interface{}, error) {
+	return s.f(msbCtx, param)
 }
 
 var _ api.Process = new(simpleProcess)
@@ -39,8 +39,8 @@ func (process *simpleProcessBuilder) Stage(function funcOneToOne) *simpleProcess
 }
 
 func (process *simpleProcessBuilder) StageN(split funcOneToOne, functions []funcOneToOne, aggregate funcOneToOne) *simpleProcessBuilder {
-	var stageN funcOneToOne = func(i interface{}) (interface{}, error) {
-		sp, err := split(i)
+	var stageN funcOneToOne = func(msbCtx api.MsbContext, i interface{}) (interface{}, error) {
+		sp, err := split(msbCtx, i)
 		if err != nil {
 			return nil, err
 		}
@@ -53,21 +53,21 @@ func (process *simpleProcessBuilder) StageN(split funcOneToOne, functions []func
 		}
 		var rlist []interface{}
 		for i, v := range spList {
-			r, err := functions[i](v)
+			r, err := functions[i](msbCtx, v)
 			if err != nil {
 				return nil, err
 			}
 			rlist = append(rlist, r)
 		}
-		return aggregate(rlist)
+		return aggregate(msbCtx, rlist)
 	}
 	process.list.PushBack(stageN)
 	return process
 }
 
 func (process *simpleProcessBuilder) StageB(route funcOneToOne, cases funcOneToOne) *simpleProcessBuilder {
-	var stageB funcOneToOne = func(i interface{}) (interface{}, error) {
-		r, err := route(i)
+	var stageB funcOneToOne = func(msbCtx api.MsbContext, i interface{}) (interface{}, error) {
+		r, err := route(msbCtx, i)
 		if err != nil {
 			return nil, err
 		}
@@ -75,7 +75,7 @@ func (process *simpleProcessBuilder) StageB(route funcOneToOne, cases funcOneToO
 		if !ok {
 			return nil, errors.New("router result is not string")
 		}
-		f, err := cases(rr)
+		f, err := cases(msbCtx, rr)
 		if err != nil {
 			return nil, err
 		}
@@ -83,17 +83,17 @@ func (process *simpleProcessBuilder) StageB(route funcOneToOne, cases funcOneToO
 		if !ok {
 			return nil, errors.New("case should be a function")
 		}
-		return ff(i)
+		return ff(msbCtx, i)
 	}
 	process.list.PushBack(stageB)
 	return process
 }
 
 func (process *simpleProcessBuilder) Build() funcOneToOne {
-	return func(i interface{}) (interface{}, error) {
+	return func(msbCtx api.MsbContext, i interface{}) (interface{}, error) {
 		for e := process.list.Front(); e != nil; e = e.Next() {
 			f := e.Value.(funcOneToOne)
-			r, err := f(i)
+			r, err := f(msbCtx, i)
 			if err != nil {
 				return nil, err
 			}
@@ -110,27 +110,27 @@ func (process *simpleProcessBuilder) BuildProcess(name string) api.Process {
 	return p
 }
 
-type funcOneToOne func(i interface{}) (interface{}, error)
+type funcOneToOne func(msbCtx api.MsbContext, i interface{}) (interface{}, error)
 
 func Function(service kern.Service) funcOneToOne {
-	return func(i interface{}) (interface{}, error) {
-		return service.Handle(i)
+	return func(msbCtx api.MsbContext, i interface{}) (interface{}, error) {
+		return service.Handle(nil, i)
 	}
 }
 
 func Transform(transformer kern.Transformer) funcOneToOne {
-	return func(i interface{}) (interface{}, error) {
-		return transformer.Transform(i)
+	return func(msbCtx api.MsbContext, i interface{}) (interface{}, error) {
+		return transformer.Transform(nil, i)
 	}
 }
 
 func FunctionC(transform funcOneToOne, function funcOneToOne) funcOneToOne {
-	return func(i interface{}) (interface{}, error) {
-		r, err := transform(i)
+	return func(msbCtx api.MsbContext, i interface{}) (interface{}, error) {
+		r, err := transform(msbCtx, i)
 		if err != nil {
 			return nil, err
 		}
-		return function(r)
+		return function(msbCtx, r)
 	}
 }
 
@@ -139,21 +139,21 @@ func Functions(funcs ...funcOneToOne) []funcOneToOne {
 }
 
 func Split(splitter kern.Splitter) funcOneToOne {
-	return func(i interface{}) (interface{}, error) {
-		return splitter.Split(i)
+	return func(msbCtx api.MsbContext, i interface{}) (interface{}, error) {
+		return splitter.Split(nil, i)
 	}
 }
 
 func Aggregate(aggregator kern.Aggregator) funcOneToOne {
-	return func(i interface{}) (interface{}, error) {
+	return func(msbCtx api.MsbContext, i interface{}) (interface{}, error) {
 		ll := i.([]interface{})
-		return aggregator.Aggregate(ll...)
+		return aggregator.Aggregate(nil, ll...)
 	}
 }
 
 func Route(router kern.Router) funcOneToOne {
-	return func(i interface{}) (interface{}, error) {
-		return router.Route(i), nil
+	return func(msbCtx api.MsbContext, i interface{}) (interface{}, error) {
+		return router.Route(nil, i), nil
 	}
 }
 
@@ -174,7 +174,7 @@ func Cases(c ...caseStruct) funcOneToOne {
 	for _, v := range c {
 		mapping[v.key] = v.function
 	}
-	return func(i interface{}) (interface{}, error) {
+	return func(msbCtx api.MsbContext, i interface{}) (interface{}, error) {
 		f, ok := mapping[i.(string)]
 		if !ok {
 			return nil, errors.New("cannot find case for:" + i.(string))
