@@ -15,5 +15,7 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-# Configuration file
+# Configuration files
 /msb.toml
+# Excluded files
+/go.sum
