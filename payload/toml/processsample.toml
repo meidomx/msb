@@ -1,0 +1,7 @@
+#DAG
+#Recursive
+
+
+# prototype + config = instance
+# instance + instance + ... = Process
+# 1. init instance w/ config = LoadConfig    2. assemble instances    3. runtime = <Method>

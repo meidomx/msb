@@ -1,0 +1,14 @@
+[root]
+#attribute
+"@hello" = ""
+#namespace
+":nsmapping" = { "@default"="1" }
+":nstag" = ""
+
+#object payload
+[root.payload]
+
+#array payload
+[[root.payload]]
+
+#todo: streaming support - streaming end

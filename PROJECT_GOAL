@@ -1,0 +1,57 @@
+ESB产品：
+(TBD)
+
+ServiceMesh：
+Spring Cloud
+Service Fabric
+NginxMesh
+Linkerd
+Envoy
+Istio
+
+服务发现：
+Consul
+
+跨网络：
+网络分区
+异地
+
+Serverless:
+(TBD)
+
+Internal integration:
+service discovery + 三种方式 name resolving/proxy/p2p
+password encryption
+配置管理  用于某个节点的配置获取或者动态获取
+
+DDD:
+CQRS
+
+
+业务功能：
+IMAP/POP3 entrypoint
+Streaming支持，某一个step是一个streaming step，即包含多个处理节点，节点之间通过数据流来进行交互，最终streming step也是要返回结果的
+file input+watch/file output
+HTTP client
+
+
+三方必须的依赖
+etcd
+rabbitmq/nsq/nekoq
+vault
+
+
+
+目标：
+1. 简化开发。比如RPC调用、scheduling等
+2. 方便第三方对接。
+3. 异构支持。
+4. 多种环境下的支持。网络、集群、组件、业务场景等。
+
+环境：
+1. 硬件：比如计算机架构、HSM、存储结构等。
+2. 集群：比如k8s、云服务商等。
+3. 软件：等等。
+
+
+
